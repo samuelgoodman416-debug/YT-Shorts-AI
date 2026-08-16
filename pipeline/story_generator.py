@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-MODEL = "claude-haiku-4-5"
+MODEL = "claude-haiku-4-5-20251001"
 
 SYSTEM_PROMPT = """You write short, original stories in the style of viral Reddit story \
 posts (r/AskReddit confessions, r/tifu, r/relationships, r/pettyrevenge) for narration \
