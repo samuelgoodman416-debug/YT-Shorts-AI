@@ -48,7 +48,7 @@ def run_once(config: dict) -> str:
         username=config.get("channel_username", "StoryHub"),
         width=config.get("video_width", 1080),
         height=config.get("video_height", 1920),
-        caption_font=config.get("caption_font", "C:/Windows/Fonts/impact.ttf"),
+        caption_font=config.get("caption_font", "assets/fonts/Fredoka-Bold.ttf"),
         caption_font_size=config.get("caption_font_size", 90),
         caption_color=config.get("caption_color", "white"),
         caption_stroke_color=config.get("caption_stroke_color", "black"),

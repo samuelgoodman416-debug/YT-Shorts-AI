@@ -120,7 +120,7 @@ def render_card(
     title_font = ImageFont.truetype(FONT_BOLD, 42)
     username_font = ImageFont.truetype(FONT_BOLD, 34)
     meta_font = ImageFont.truetype(FONT_BOLD, 28)
-    emoji_font = ImageFont.truetype(EMOJI_FONT, 30)
+    avatar_font = ImageFont.truetype(FONT_BOLD, 34)
 
     probe = Image.new("RGBA", (card_width, 10))
     probe_draw = ImageDraw.Draw(probe)
@@ -156,11 +156,11 @@ def render_card(
     avatar_color = avatar_colors[len(username) % len(avatar_colors)]
     draw.ellipse([x, y, x + AVATAR_SIZE, y + AVATAR_SIZE], fill=avatar_color)
     draw.text(
-        (x + AVATAR_SIZE / 2, y + AVATAR_SIZE / 2 - 6),
-        "\U0001F4D6",
-        font=emoji_font,
+        (x + AVATAR_SIZE / 2, y + AVATAR_SIZE / 2),
+        username[:1].upper(),
+        font=avatar_font,
+        fill="white",
         anchor="mm",
-        embedded_color=True,
     )
 
     name_x = x + AVATAR_SIZE + 18
@@ -178,7 +178,11 @@ def render_card(
             card.alpha_composite(award_img, (int(icon_x), int(reaction_y)))
             icon_x += icon_size + icon_gap
     else:
-        draw.text((x, reaction_y), REACTION_EMOJIS, font=emoji_font, fill=(0, 0, 0), embedded_color=True)
+        try:
+            emoji_font = ImageFont.truetype(EMOJI_FONT, 30)
+            draw.text((x, reaction_y), REACTION_EMOJIS, font=emoji_font, fill=(0, 0, 0), embedded_color=True)
+        except OSError:
+            pass  # no color emoji font available on this system; skip the decorative row
 
     title_y = reaction_y + reactions_h
     for line in title_lines:
