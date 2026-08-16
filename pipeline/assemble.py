@@ -12,7 +12,15 @@ CAPTION_STROKE_COLOR = "black"
 CAPTION_STROKE_WIDTH = 4
 
 
-def _build_caption_clips(audio_path: str, width: int) -> list[TextClip]:
+def _build_caption_clips(
+    audio_path: str,
+    width: int,
+    font: str,
+    font_size: int,
+    color: str,
+    stroke_color: str,
+    stroke_width: int,
+) -> list[TextClip]:
     words = transcribe_words(audio_path)
     captions = group_into_captions(words)
 
@@ -20,12 +28,12 @@ def _build_caption_clips(audio_path: str, width: int) -> list[TextClip]:
     for text, start, end in captions:
         clip = (
             TextClip(
-                font=CAPTION_FONT,
+                font=font,
                 text=text.upper(),
-                font_size=CAPTION_FONT_SIZE,
-                color=CAPTION_COLOR,
-                stroke_color=CAPTION_STROKE_COLOR,
-                stroke_width=CAPTION_STROKE_WIDTH,
+                font_size=font_size,
+                color=color,
+                stroke_color=stroke_color,
+                stroke_width=stroke_width,
                 method="caption",
                 size=(int(width * 0.9), None),
                 text_align="center",
@@ -38,10 +46,28 @@ def _build_caption_clips(audio_path: str, width: int) -> list[TextClip]:
     return clips
 
 
-def assemble_video(audio_path: str, output_path: str, width: int = 1080, height: int = 1920) -> str:
+def assemble_video(
+    audio_path: str,
+    output_path: str,
+    width: int = 1080,
+    height: int = 1920,
+    caption_font: str = CAPTION_FONT,
+    caption_font_size: int = CAPTION_FONT_SIZE,
+    caption_color: str = CAPTION_COLOR,
+    caption_stroke_color: str = CAPTION_STROKE_COLOR,
+    caption_stroke_width: int = CAPTION_STROKE_WIDTH,
+) -> str:
     audio = AudioFileClip(audio_path)
     background = get_background_clip(audio.duration, width=width, height=height)
-    caption_clips = _build_caption_clips(audio_path, width)
+    caption_clips = _build_caption_clips(
+        audio_path,
+        width,
+        caption_font,
+        caption_font_size,
+        caption_color,
+        caption_stroke_color,
+        caption_stroke_width,
+    )
 
     video = CompositeVideoClip([background, *caption_clips], size=(width, height)).with_audio(audio)
     video.write_videofile(output_path, fps=30, codec="libx264", audio_codec="aac")
