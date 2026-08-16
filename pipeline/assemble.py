@@ -3,6 +3,7 @@
 import re
 
 from moviepy import AudioFileClip, CompositeVideoClip, ImageClip, TextClip
+from moviepy.video.fx import FadeOut, Resize
 
 from pipeline.background import get_background_clip
 from pipeline.captions import group_into_captions, transcribe_words
@@ -16,6 +17,19 @@ CAPTION_STROKE_WIDTH = 4
 
 HOOK_MIN_DURATION = 2.0
 HOOK_MAX_DURATION = 6.0
+
+POP_DURATION = 0.15
+POP_START_SCALE = 0.6
+
+
+def _pop_scale(t: float, duration: float = POP_DURATION, start_scale: float = POP_START_SCALE) -> float:
+    """Ease-out-back scale curve: grows from start_scale to 1.0 with a slight overshoot bounce."""
+    if t >= duration:
+        return 1.0
+    x = t / duration
+    c1, c3 = 1.70158, 2.70158
+    eased = 1 + c3 * (x - 1) ** 3 + c1 * (x - 1) ** 2
+    return start_scale + (1 - start_scale) * eased
 
 
 def _hook_duration(words: list) -> float:
@@ -31,6 +45,7 @@ def _build_hook_card_clip(title: str, username: str, duration: float, width: int
     return (
         ImageClip(card)
         .with_duration(duration)
+        .with_effects([Resize(_pop_scale), FadeOut(0.15)])
         .with_position(("center", int(0.12 * height)))
     )
 
@@ -60,6 +75,7 @@ def _build_caption_clips(
                 size=(int(width * 0.9), None),
                 text_align="center",
             )
+            .with_effects([Resize(_pop_scale)])
             .with_start(start)
             .with_end(end)
             .with_position(("center", "center"))

@@ -1,6 +1,8 @@
 """Renders a fake social-post 'hook card' (avatar, username, title, reactions) as an overlay image."""
 
+import glob
 import math
+import random
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
@@ -17,15 +19,27 @@ META_COLOR = (80, 80, 80)
 ICON_COLOR = (60, 60, 60)
 REACTION_EMOJIS = "\U0001F60A \U00002764\U0000FE0F \U0001F62E \U0001F525"
 
-DEFAULT_AWARD_ICONS = [
-    "assets/reddit_icons/icon_r2_c4.png",
-    "assets/reddit_icons/icon_r2_c8.png",
-    "assets/reddit_icons/icon_r2_c5.png",
-    "assets/reddit_icons/icon_r4_c3.png",
-    "assets/reddit_icons/icon_r5_c6.png",
-    "assets/reddit_icons/icon_r3_c3.png",
-    "assets/reddit_icons/icon_r3_c5.png",
-]
+AWARD_ICON_DIR = "assets/reddit_icons"
+
+
+def _load_award_icon_pool() -> list[str]:
+    return sorted(glob.glob(f"{AWARD_ICON_DIR}/*.png"))
+
+
+def _resize_rgba(img: Image.Image, size: tuple[int, int]) -> Image.Image:
+    """Resize an RGBA image without smearing the color of fully-transparent pixels into edges."""
+    arr = np.array(img).astype(np.float32)
+    alpha = arr[:, :, 3:4] / 255.0
+    premultiplied = arr.copy()
+    premultiplied[:, :, :3] *= alpha
+    premult_img = Image.fromarray(premultiplied.astype(np.uint8), "RGBA")
+    resized = premult_img.resize(size, Image.LANCZOS)
+
+    out = np.array(resized).astype(np.float32)
+    out_alpha = out[:, :, 3:4] / 255.0
+    safe_alpha = np.where(out_alpha == 0, 1, out_alpha)
+    out[:, :, :3] = np.clip(out[:, :, :3] / safe_alpha, 0, 255)
+    return Image.fromarray(out.astype(np.uint8), "RGBA")
 
 
 def _wrap_text(draw, text, font, max_width):
@@ -91,13 +105,18 @@ def render_card(
     title: str,
     username: str = "StoryHub",
     card_width: int = 900,
-    award_icons: list[str] | None = DEFAULT_AWARD_ICONS,
+    award_icons: list[str] | None = None,
 ) -> np.ndarray:
     """Render the hook card and return it as an RGBA numpy array sized to its own content.
 
-    award_icons: image file paths drawn in a row below the username. Defaults to a curated
-    set of Reddit-style award icons; pass an empty list to fall back to plain emoji reactions.
+    award_icons: image file paths drawn in a row below the username. Defaults to a random
+    subset of whatever PNGs are in AWARD_ICON_DIR (different order and selection each
+    call); pass an empty list to fall back to plain emoji reactions instead.
     """
+    if award_icons is None:
+        pool = _load_award_icon_pool()
+        count = min(len(pool), random.randint(5, 7))
+        award_icons = random.sample(pool, k=count)
     title_font = ImageFont.truetype(FONT_BOLD, 42)
     username_font = ImageFont.truetype(FONT_BOLD, 34)
     meta_font = ImageFont.truetype(FONT_BOLD, 28)
@@ -152,11 +171,12 @@ def render_card(
     reaction_y = y + AVATAR_SIZE + 4
     if award_icons:
         icon_x = x
-        icon_size = 40
+        icon_size = 38
+        icon_gap = 16
         for icon_path in award_icons:
-            award_img = Image.open(icon_path).convert("RGBA").resize((icon_size, icon_size))
+            award_img = _resize_rgba(Image.open(icon_path).convert("RGBA"), (icon_size, icon_size))
             card.alpha_composite(award_img, (int(icon_x), int(reaction_y)))
-            icon_x += icon_size + 6
+            icon_x += icon_size + icon_gap
     else:
         draw.text((x, reaction_y), REACTION_EMOJIS, font=emoji_font, fill=(0, 0, 0), embedded_color=True)
 
