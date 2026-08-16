@@ -7,3 +7,7 @@ output/
 state.db
 youtube_token.json
 client_secret*.json
+assets/background_clips/*.mp4
+assets/background_clips/*.mov
+assets/background_clips/*.m4v
+scripts/__pycache__/

@@ -1,5 +1,5 @@
-praw==7.7.1
-edge-tts==6.1.19
+anthropic==0.122.0
+edge-tts==7.2.8
 faster-whisper==1.0.3
 moviepy==2.1.2
 pyyaml==6.0.2
