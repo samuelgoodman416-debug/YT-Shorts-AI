@@ -19,6 +19,11 @@ videos_per_run: 1
 video_width: 1080
 video_height: 1920
 
+# Cut the background footage into this many segments (different clip each time, with a
+# crossfade transition between cuts). Segments favor an even time split, but a clip
+# shorter than its share yields time to clips with more footage rather than looping.
+background_segments: 3
+
 # Display name shown on the fake post "hook card" at the start of each video
 channel_username: StoryHub
 

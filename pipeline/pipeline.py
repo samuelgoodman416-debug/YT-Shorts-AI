@@ -53,6 +53,7 @@ def run_once(config: dict) -> str:
         caption_color=config.get("caption_color", "white"),
         caption_stroke_color=config.get("caption_stroke_color", "black"),
         caption_stroke_width=config.get("caption_stroke_width", 4),
+        background_segments=config.get("background_segments", 3),
     )
 
     record_video(story.title, story.text, str(video_path))

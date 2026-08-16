@@ -5,7 +5,7 @@ import re
 from moviepy import AudioFileClip, CompositeVideoClip, ImageClip, TextClip
 from moviepy.video.fx import FadeOut, Resize
 
-from pipeline.background import get_background_clip
+from pipeline.background import get_multi_background_clip
 from pipeline.captions import group_into_captions, transcribe_words
 from pipeline.reddit_card import render_card
 
@@ -96,9 +96,12 @@ def assemble_video(
     caption_color: str = CAPTION_COLOR,
     caption_stroke_color: str = CAPTION_STROKE_COLOR,
     caption_stroke_width: int = CAPTION_STROKE_WIDTH,
+    background_segments: int = 3,
 ) -> str:
     audio = AudioFileClip(audio_path)
-    background = get_background_clip(audio.duration, width=width, height=height)
+    background = get_multi_background_clip(
+        audio.duration, width=width, height=height, num_segments=background_segments
+    )
     words = transcribe_words(audio_path)
 
     layers = [background]
