@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+.claude/settings.local.json
+*.pyc
+.env
+output/
+state.db
+youtube_token.json
+client_secret*.json

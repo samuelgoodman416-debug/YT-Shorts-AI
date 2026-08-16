@@ -1,0 +1,9 @@
+praw==7.7.1
+edge-tts==6.1.19
+faster-whisper==1.0.3
+moviepy==2.1.2
+pyyaml==6.0.2
+python-dotenv==1.0.1
+google-api-python-client==2.149.0
+google-auth-oauthlib==1.2.1
+google-auth-httplib2==0.2.0

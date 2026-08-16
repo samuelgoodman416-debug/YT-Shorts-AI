@@ -1,0 +1,31 @@
+# Subreddits to pull stories from (text-only posts work best)
+subreddits:
+  - AskReddit
+  - tifu
+
+# Minimum upvotes for a post to be considered (filters out low-quality posts)
+min_upvotes: 500
+
+# Target narration length in seconds. Posts are trimmed to roughly this length.
+target_duration_seconds: 55
+
+# edge-tts voice. Run `edge-tts --list-voices` to see all options.
+voice: en-US-ChristopherNeural
+
+# How many videos to produce per pipeline run
+videos_per_run: 1
+
+# Output video resolution (9:16 vertical)
+video_width: 1080
+video_height: 1920
+
+# Caption styling
+caption_font: assets/fonts/Anton-Regular.ttf
+caption_font_size: 90
+caption_color: white
+caption_stroke_color: black
+caption_stroke_width: 4
+
+# Background music (optional). Leave blank to disable.
+background_music: ""
+background_music_volume: 0.08
