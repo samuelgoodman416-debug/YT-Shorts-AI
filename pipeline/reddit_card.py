@@ -17,6 +17,16 @@ META_COLOR = (80, 80, 80)
 ICON_COLOR = (60, 60, 60)
 REACTION_EMOJIS = "\U0001F60A \U00002764\U0000FE0F \U0001F62E \U0001F525"
 
+DEFAULT_AWARD_ICONS = [
+    "assets/reddit_icons/icon_r2_c4.png",
+    "assets/reddit_icons/icon_r2_c8.png",
+    "assets/reddit_icons/icon_r2_c5.png",
+    "assets/reddit_icons/icon_r4_c3.png",
+    "assets/reddit_icons/icon_r5_c6.png",
+    "assets/reddit_icons/icon_r3_c3.png",
+    "assets/reddit_icons/icon_r3_c5.png",
+]
+
 
 def _wrap_text(draw, text, font, max_width):
     words = text.split()
@@ -81,12 +91,12 @@ def render_card(
     title: str,
     username: str = "StoryHub",
     card_width: int = 900,
-    award_icons: list[str] | None = None,
+    award_icons: list[str] | None = DEFAULT_AWARD_ICONS,
 ) -> np.ndarray:
     """Render the hook card and return it as an RGBA numpy array sized to its own content.
 
-    award_icons: optional list of image file paths (e.g. Reddit award PNGs) drawn in a row
-    below the username instead of the placeholder emoji reactions.
+    award_icons: image file paths drawn in a row below the username. Defaults to a curated
+    set of Reddit-style award icons; pass an empty list to fall back to plain emoji reactions.
     """
     title_font = ImageFont.truetype(FONT_BOLD, 42)
     username_font = ImageFont.truetype(FONT_BOLD, 34)
@@ -142,7 +152,7 @@ def render_card(
     reaction_y = y + AVATAR_SIZE + 4
     if award_icons:
         icon_x = x
-        icon_size = 32
+        icon_size = 40
         for icon_path in award_icons:
             award_img = Image.open(icon_path).convert("RGBA").resize((icon_size, icon_size))
             card.alpha_composite(award_img, (int(icon_x), int(reaction_y)))
