@@ -15,7 +15,7 @@ video_width: 1080
 video_height: 1920
 
 # Caption styling
-caption_font: assets/fonts/Anton-Regular.ttf
+caption_font: C:/Windows/Fonts/impact.ttf
 caption_font_size: 90
 caption_color: white
 caption_stroke_color: black
