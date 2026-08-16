@@ -34,11 +34,18 @@ def run_once(config: dict) -> str:
     video_path = OUTPUT_DIR / f"{slug}.mp4"
 
     narration = sanitize_for_tts(story.text)
-    synthesize(narration, str(audio_path), voice=config.get("voice", "en-US-ChristopherNeural"))
+    synthesize(
+        narration,
+        str(audio_path),
+        voice=config.get("voice", "en-US-ChristopherNeural"),
+        rate=config.get("voice_rate", "+25%"),
+    )
 
     assemble_video(
         str(audio_path),
         str(video_path),
+        title=story.title,
+        username=config.get("channel_username", "StoryHub"),
         width=config.get("video_width", 1080),
         height=config.get("video_height", 1920),
         caption_font=config.get("caption_font", "C:/Windows/Fonts/impact.ttf"),

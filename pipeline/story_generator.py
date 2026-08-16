@@ -36,7 +36,7 @@ def generate_story(topic_hint: str | None = None, target_words: int = 150) -> St
 
     user_prompt = (
         f"Write a new original story now. Target length: about {target_words} words "
-        f"of narration (roughly {target_words // 3} seconds spoken aloud)."
+        f"of narration (roughly {int(target_words / 5.6)} seconds spoken aloud)."
     )
     if topic_hint:
         user_prompt += f" Theme/topic hint: {topic_hint}."

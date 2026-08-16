@@ -5,16 +5,17 @@ import asyncio
 import edge_tts
 
 DEFAULT_VOICE = "en-US-ChristopherNeural"
+DEFAULT_RATE = "+25%"
 
 
-async def _synthesize(text: str, voice: str, output_path: str) -> None:
-    communicate = edge_tts.Communicate(text, voice)
+async def _synthesize(text: str, voice: str, rate: str, output_path: str) -> None:
+    communicate = edge_tts.Communicate(text, voice, rate=rate)
     await communicate.save(output_path)
 
 
-def synthesize(text: str, output_path: str, voice: str = DEFAULT_VOICE) -> str:
+def synthesize(text: str, output_path: str, voice: str = DEFAULT_VOICE, rate: str = DEFAULT_RATE) -> str:
     """Render text to an mp3 file at output_path. Returns output_path."""
-    asyncio.run(_synthesize(text, voice, output_path))
+    asyncio.run(_synthesize(text, voice, rate, output_path))
     return output_path
 
 

@@ -1,11 +1,16 @@
 # Optional theme/topic hint passed to the story generator (leave blank for variety)
 story_topic_hint: ""
 
-# Target narration length in words (~3 words/sec spoken)
-target_story_words: 150
+# Target narration length in words (~5.6 words/sec spoken at the voice_rate below)
+target_story_words: 220
 
 # edge-tts voice. Run `edge-tts --list-voices` to see all options.
 voice: en-US-ChristopherNeural
+
+# Narration speed, as a percent offset from normal (e.g. "+25%", "+0%", "-10%").
+# Faster speech = more words fit in a short runtime, which tends to help retention.
+# +80% roughly matches the fast-paced narration style common in viral reddit-story videos.
+voice_rate: "+80%"
 
 # How many videos to produce per pipeline run
 videos_per_run: 1
@@ -14,8 +19,11 @@ videos_per_run: 1
 video_width: 1080
 video_height: 1920
 
+# Display name shown on the fake post "hook card" at the start of each video
+channel_username: StoryHub
+
 # Caption styling
-caption_font: C:/Windows/Fonts/impact.ttf
+caption_font: assets/fonts/Fredoka-Bold.ttf
 caption_font_size: 90
 caption_color: white
 caption_stroke_color: black
